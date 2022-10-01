@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiFilter(OrderFilter::class, properties: ['firstname', 'lastname'], arguments: ['orderParameterName' => 'order'])]
 
 #[ORM\Entity(repositoryClass: SecretaryRepository::class)]
-class Secretary
+class Secretary extends User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -78,6 +78,9 @@ class Secretary
 
     #[ORM\OneToMany(mappedBy: 'secretary', targetEntity: Doctor::class)]
     private $doctors;
+
+    #[ORM\OneToOne(inversedBy: 'secretary', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $user_id;
 
     public function __construct()
     {
@@ -295,6 +298,18 @@ class Secretary
                 $doctor->setSecretary(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?User $user_id): self
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }

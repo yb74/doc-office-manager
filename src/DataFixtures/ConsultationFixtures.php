@@ -17,6 +17,8 @@ class ConsultationFixtures extends Fixture
                     ->setConsultationDetails("This is the consultation details n°".$i)
                     ->setConsultationCreatedAt(new \DateTime())
                     ->setConsultationUpdatedAt(new \DateTime())
+                    ->setStartTime(new \DateTime())
+                    ->setEndTime(new \DateTime())
             );
         }
 

@@ -10,6 +10,7 @@ use App\Entity\MedicalPrescription;
 use App\Entity\Medication;
 use App\Entity\Patient;
 use App\Entity\Secretary;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -23,6 +24,7 @@ class PatientFixtures extends Fixture
 
         for ($i=1; $i < 10; $i++) {
             // Instantiate entities
+            $user = new User();
             $doctor = new Doctor();
             $secretary = new Secretary();
             $patient = new Patient();
@@ -31,6 +33,21 @@ class PatientFixtures extends Fixture
             $consultation = new Consultation();
             $medicalHistory = new MedicalHistory();
             $diagnostic = new Diagnostic();
+
+            // Users
+            $userRoles = [["ROLE_DOCTOR", "ROLE_SECRETARY"]];
+
+            $user->setLogin("myLogin".$i);
+            $user->setPassword("myPassword".$i);
+            $user->setRoles($userRoles[array_rand($userRoles)]);
+
+            if ($user->getRoles() == "ROLE_DOCTOR") {
+                $user->setDoctor($doctor);
+            }
+
+            if ($user->getRoles() == "ROLE_SECRETARY") {
+                $user->setSecretary($secretary);
+            }
 
             // Doctors
             $secretary->addDoctor($doctor);
@@ -107,13 +124,13 @@ class PatientFixtures extends Fixture
             $manager->persist($medicalPrescription);
 
             // Medication
-            $form = ["Pills", "Powder", "Capsules"];
+            $medicationForm = ["Pills", "Powder", "Capsules"];
 
             $patient->addMedication($medication);
             $medicalPrescription->addMedication($medication);
 
             $medication->setMedicationName("MedicationName".$i);
-            $medication->setMedicationForm($form[array_rand($form)]);
+            $medication->setMedicationForm($medicationForm[array_rand($medicationForm)]);
             $medication-> setMedicationDosage("1".$i." mg");
             $medication->setMedicationCreatedAt(new \DateTime());
             $medication->setMedicationUpdatedAt(new \DateTime());

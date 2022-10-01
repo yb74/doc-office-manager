@@ -15,7 +15,9 @@ class DoctorFixtures extends Fixture
 
             $doctor->setFirstname("DoctorFirstname".$i);
             $doctor->setLastname("DoctorLastname".$i);
-            $doctor->setPhoneNumber("06 17 54 63 0".$i);
+            $doctor->setHomePhoneNumber("04 17 54 63 0".$i);
+            $doctor->setWorkPhoneNumber("04 54 77 64 6".$i);
+            $doctor->setMobilePhoneNumber("06 22 76 67 3".$i);
             $doctor->setEmail("doctor-email".$i."@hotmail.fr");
             $doctor->setPassword("password".$i);
             $doctor->setDoctorCreatedAt(new \DateTime());

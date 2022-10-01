@@ -91,6 +91,9 @@ class Doctor extends User
     #[ORM\ManyToOne(targetEntity: Secretary::class, inversedBy: 'doctors')]
     private $secretary;
 
+    #[ORM\OneToOne(inversedBy: 'doctor', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $user_id;
+
     public function __construct()
     {
         $this->consultations = new ArrayCollection();
@@ -381,6 +384,18 @@ class Doctor extends User
     public function setSecretary(?Secretary $secretary): self
     {
         $this->secretary = $secretary;
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?User $user_id): self
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }

@@ -2,12 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+
+#[ApiResource(
+    collectionOperations: ['get', 'post'],
+    itemOperations: ['get', 'put', 'delete'],
+    attributes: ["pagination_enabled" => false],
+)]
+
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -23,6 +32,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
+    private $doctor;
+
+    #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
+    private $secretary;
 
     public function getId(): ?int
     {
@@ -92,5 +107,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getDoctor(): ?Doctor
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(?Doctor $doctor): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($doctor === null && $this->doctor !== null) {
+            $this->doctor->setUserId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($doctor !== null && $doctor->getUserId() !== $this) {
+            $doctor->setUserId($this);
+        }
+
+        $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getSecretary(): ?Secretary
+    {
+        return $this->secretary;
+    }
+
+    public function setSecretary(?Secretary $secretary): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($secretary === null && $this->secretary !== null) {
+            $this->secretary->setUserId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($secretary !== null && $secretary->getUserId() !== $this) {
+            $secretary->setUserId($this);
+        }
+
+        $this->secretary = $secretary;
+
+        return $this;
     }
 }
