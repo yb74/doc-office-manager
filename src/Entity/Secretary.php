@@ -79,7 +79,7 @@ class Secretary extends User
     #[ORM\OneToMany(mappedBy: 'secretary', targetEntity: Doctor::class)]
     private $doctors;
 
-    #[ORM\OneToOne(inversedBy: 'secretary', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $user_id;
 
     public function __construct()
