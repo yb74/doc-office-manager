@@ -21,6 +21,7 @@ class PatientFixtures extends Fixture
         $gender = ["Male", "Female"];
         $maritalStatus = ["Single", "Married", "divorced"];
         $bloodType = ["O-", "O+", "AB+"];
+        $userRoles = ["ROLE_DOCTOR", "ROLE_SECRETARY"];
 
         for ($i=1; $i < 10; $i++) {
             // Instantiate entities
@@ -35,19 +36,18 @@ class PatientFixtures extends Fixture
             $diagnostic = new Diagnostic();
 
             // Users
-            $userRoles = [["ROLE_DOCTOR", "ROLE_SECRETARY"]];
-
             $user->setLogin("myLogin".$i);
             $user->setPassword("myPassword".$i);
-            $user->setRoles($userRoles[array_rand($userRoles)]);
+            $user->setRoles([$userRoles[array_rand($userRoles)]]); // Randomly setting a role to the created user
+            $user->setDoctor($doctor);
 
-            if ($user->getRoles() == "ROLE_DOCTOR") {
+            if(in_array('ROLE_DOCTOR', $user->getRoles())) {
                 $user->setDoctor($doctor);
-            }
-
-            if ($user->getRoles() == "ROLE_SECRETARY") {
+            } else if(in_array('ROLE_SECRETARY', $user->getRoles())) {
                 $user->setSecretary($secretary);
             }
+
+            $manager->persist($user);
 
             // Doctors
             $secretary->addDoctor($doctor);
@@ -146,6 +146,8 @@ class PatientFixtures extends Fixture
             $consultation->setConsultationDetails("This is the consultation details n°".$i);
             $consultation->setConsultationCreatedAt(new \DateTime());
             $consultation->setConsultationUpdatedAt(new \DateTime());
+            $consultation->setStartTime(new \DateTime('14:00'));
+            $consultation->setEndTime(new \DateTime('18:00'));
 
             $manager->persist($consultation);
 

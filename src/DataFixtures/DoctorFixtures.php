@@ -10,16 +10,27 @@ class DoctorFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $gender = ["Male", "Female"];
         for ($i=1; $i < 10; $i++) {
             $doctor = new Doctor();
 
+            // Doctors
+
+            // $secretary->addDoctor($doctor);
+
+            $doctor->setRppsNumber("14569".$i);
             $doctor->setFirstname("DoctorFirstname".$i);
             $doctor->setLastname("DoctorLastname".$i);
-            $doctor->setHomePhoneNumber("04 17 54 63 0".$i);
-            $doctor->setWorkPhoneNumber("04 54 77 64 6".$i);
-            $doctor->setMobilePhoneNumber("06 22 76 67 3".$i);
+            $doctor->setGender($gender[array_rand($gender)]);
+            $doctor->setStreetNumber("1".$i);
+            $doctor->setStreetName("Avenue des lilas");
+            $doctor->setPostalCode("75000");
+            $doctor->setCity("Paris");
+            $doctor->setCountry("France");
+            $doctor->setHomePhoneNumber("04 60 69 48 2".$i);
+            $doctor->setWorkPhoneNumber("06 47 65 11 5".$i);
+            $doctor->setMobilePhoneNumber("06 11 47 36 2".$i);
             $doctor->setEmail("doctor-email".$i."@hotmail.fr");
-            $doctor->setPassword("password".$i);
             $doctor->setDoctorCreatedAt(new \DateTime());
             $doctor->setDoctorUpdatedAt(new \DateTime());
 

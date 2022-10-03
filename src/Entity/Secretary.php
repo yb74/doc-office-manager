@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiFilter(OrderFilter::class, properties: ['firstname', 'lastname'], arguments: ['orderParameterName' => 'order'])]
 
 #[ORM\Entity(repositoryClass: SecretaryRepository::class)]
-class Secretary extends User
+class Secretary
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiFilter(OrderFilter::class, properties: ['firstname', 'lastname'], arguments: ['orderParameterName' => 'order'])]
 
 #[ORM\Entity(repositoryClass: DoctorRepository::class)]
-class Doctor extends User
+class Doctor
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
