@@ -14,10 +14,6 @@ class DoctorFixtures extends Fixture
         for ($i=1; $i < 10; $i++) {
             $doctor = new Doctor();
 
-            // Doctors
-
-            // $secretary->addDoctor($doctor);
-
             $doctor->setRppsNumber("14569".$i);
             $doctor->setFirstname("DoctorFirstname".$i);
             $doctor->setLastname("DoctorLastname".$i);

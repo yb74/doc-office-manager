@@ -88,11 +88,11 @@ class Doctor
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: MedicalPrescription::class)]
     private $medicalPrescriptions;
 
-    #[ORM\ManyToOne(targetEntity: Secretary::class, inversedBy: 'doctors')]
-    private $secretary;
-
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $user_id;
+
+    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'doctor')]
+    private $institution;
 
     public function __construct()
     {
@@ -376,18 +376,6 @@ class Doctor
         return $this;
     }
 
-    public function getSecretary(): ?Secretary
-    {
-        return $this->secretary;
-    }
-
-    public function setSecretary(?Secretary $secretary): self
-    {
-        $this->secretary = $secretary;
-
-        return $this;
-    }
-
     public function getUserId(): ?User
     {
         return $this->user_id;
@@ -396,6 +384,18 @@ class Doctor
     public function setUserId(?User $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getInstitution(): ?Institution
+    {
+        return $this->institution;
+    }
+
+    public function setInstitution(?Institution $institution): self
+    {
+        $this->institution = $institution;
 
         return $this;
     }

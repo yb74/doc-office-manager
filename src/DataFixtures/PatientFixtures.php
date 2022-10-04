@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Consultation;
 use App\Entity\Diagnostic;
 use App\Entity\Doctor;
+use App\Entity\Institution;
 use App\Entity\MedicalHistory;
 use App\Entity\MedicalPrescription;
 use App\Entity\Medication;
@@ -19,6 +20,7 @@ class PatientFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $gender = ["Male", "Female"];
+        $institutionType = ["Hospital", "Medical center", "Radiology"];
         $maritalStatus = ["Single", "Married", "divorced"];
         $bloodType = ["O-", "O+", "AB+"];
         $userRoles = ["ROLE_DOCTOR", "ROLE_SECRETARY"];
@@ -26,6 +28,7 @@ class PatientFixtures extends Fixture
         for ($i=1; $i < 10; $i++) {
             // Instantiate entities
             $user = new User();
+            $institution = new Institution();
             $doctor = new Doctor();
             $secretary = new Secretary();
             $patient = new Patient();
@@ -49,9 +52,15 @@ class PatientFixtures extends Fixture
 
             $manager->persist($user);
 
-            // Doctors
-            $secretary->addDoctor($doctor);
+            // Institution
+            $institution->setName("Institution name" . $i);
+            $institution->setType($institutionType[array_rand($institutionType)]);
+            $institution->addDoctor($doctor);
+            $institution->addSecretary($secretary);
 
+            $manager->persist($institution);
+
+            // Doctors
             $doctor->setRppsNumber("14569".$i);
             $doctor->setFirstname("DoctorFirstname".$i);
             $doctor->setLastname("DoctorLastname".$i);

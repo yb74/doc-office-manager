@@ -76,16 +76,11 @@ class Secretary
     #[ORM\Column(type: 'datetime')]
     private $secretaryUpdatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'secretary', targetEntity: Doctor::class)]
-    private $doctors;
-
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $user_id;
 
-    public function __construct()
-    {
-        $this->doctors = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'secretary')]
+    private $institution;
 
     public function getId(): ?int
     {
@@ -272,36 +267,6 @@ class Secretary
         return $this;
     }
 
-    /**
-     * @return Collection<int, Doctor>
-     */
-    public function getDoctors(): Collection
-    {
-        return $this->doctors;
-    }
-
-    public function addDoctor(Doctor $doctor): self
-    {
-        if (!$this->doctors->contains($doctor)) {
-            $this->doctors[] = $doctor;
-            $doctor->setSecretary($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDoctor(Doctor $doctor): self
-    {
-        if ($this->doctors->removeElement($doctor)) {
-            // set the owning side to null (unless already changed)
-            if ($doctor->getSecretary() === $this) {
-                $doctor->setSecretary(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUserId(): ?User
     {
         return $this->user_id;
@@ -310,6 +275,18 @@ class Secretary
     public function setUserId(?User $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getInstitution(): ?Institution
+    {
+        return $this->institution;
+    }
+
+    public function setInstitution(?Institution $institution): self
+    {
+        $this->institution = $institution;
 
         return $this;
     }
