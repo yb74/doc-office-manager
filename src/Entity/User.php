@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 
@@ -14,29 +15,33 @@ use Symfony\Component\Security\Core\User\UserInterface;
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
     attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['user']]
 )]
-
-
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['user'])]
     private $login;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(['user'])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
+    #[Groups(['user'])]
     private $doctor;
 
     #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
+    #[Groups('user')]
     private $secretary;
 
     public function getId(): ?int

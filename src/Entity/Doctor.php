@@ -31,16 +31,20 @@ class Doctor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user'])]
     private $rppsNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['user'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user'])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
