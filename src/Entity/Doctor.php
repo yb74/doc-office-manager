@@ -99,7 +99,7 @@ class Doctor
     private $medicalPrescriptions;
 
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
-    private $user_id;
+    private $user;
 
     #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'doctor')]
     private $institution;
@@ -388,12 +388,12 @@ class Doctor
 
     public function getUserId(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setUserId(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
