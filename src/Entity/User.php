@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
     collectionOperations: ['get', 'post'],
@@ -17,6 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     attributes: ["pagination_enabled" => false],
     normalizationContext: ['groups' => ['user']]
 )]
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -27,6 +31,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['user'])]
+    #[NotBlank]
+    #[Length(min: 3)]
     private $login;
 
     #[ORM\Column(type: 'json')]
@@ -38,10 +44,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
     #[Groups(['user'])]
+    #[ApiSubresource]
     private $doctor;
 
     #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
     #[Groups('user')]
+    #[ApiSubresource]
     private $secretary;
 
     public function getId(): ?int

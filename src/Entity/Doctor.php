@@ -6,19 +6,23 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 use App\Repository\DoctorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
-    attributes: ["pagination_enabled" => false],
+    attributes: ["pagination_enabled" => false]
 )]
+
 #[ApiFilter(SearchFilter::class, properties: [
     'firstname' => SearchFilter::STRATEGY_PARTIAL,
     'lastname' => SearchFilter::STRATEGY_PARTIAL
@@ -26,6 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiFilter(OrderFilter::class, properties: ['firstname', 'lastname'], arguments: ['orderParameterName' => 'order'])]
 
 #[ORM\Entity(repositoryClass: DoctorRepository::class)]
+
 class Doctor
 {
     #[ORM\Id]
@@ -35,16 +40,17 @@ class Doctor
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
     private $rppsNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
     #[Groups(['user'])]
+    #[NotBlank]
+    #[Length(min: 3)]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user'])]
+    #[Assert\NotIdenticalTo(propertyPath: "firstname")]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]

@@ -8,6 +8,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\MedicationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
@@ -30,6 +32,8 @@ class Medication
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[NotBlank]
+    #[Length(min: 3)]
     private $medicationName;
 
     #[ORM\Column(type: 'string', length: 255)]
