@@ -42,12 +42,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
     #[Groups(['user'])]
     #[ApiSubresource]
     private $doctor;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
     #[Groups('user')]
     #[ApiSubresource]
     private $secretary;

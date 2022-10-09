@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\InstitutionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
@@ -30,9 +32,11 @@ class Institution
     private $type;
 
     #[ORM\OneToMany(mappedBy: 'institution', targetEntity: Doctor::class)]
+    #[ApiSubresource]
     private $doctor;
 
     #[ORM\OneToMany(mappedBy: 'institution', targetEntity: Secretary::class)]
+    #[ApiSubresource]
     private $secretary;
 
     public function __construct()
