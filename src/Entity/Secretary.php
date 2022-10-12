@@ -30,22 +30,21 @@ class Secretary
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $staffNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
     private $gender;
 
     #[ORM\Column(type: 'string', length: 255)]

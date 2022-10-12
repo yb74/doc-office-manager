@@ -36,20 +36,20 @@ class Doctor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $rppsNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     #[NotBlank]
     #[Length(min: 3)]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'institution'])]
     #[Assert\NotIdenticalTo(propertyPath: "firstname")]
     private $lastname;
 

@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
     attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['institution']]
 )]
 
 #[ORM\Entity(repositoryClass: InstitutionRepository::class)]
@@ -23,19 +24,24 @@ class Institution
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['institution'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['institution'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['institution'])]
     private $type;
 
     #[ORM\OneToMany(mappedBy: 'institution', targetEntity: Doctor::class)]
+    #[Groups(['institution'])]
     #[ApiSubresource]
     private $doctor;
 
     #[ORM\OneToMany(mappedBy: 'institution', targetEntity: Secretary::class)]
+    #[Groups(['institution'])]
     #[ApiSubresource]
     private $secretary;
 
