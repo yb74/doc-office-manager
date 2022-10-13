@@ -10,12 +10,14 @@ use App\Repository\MedicalPrescriptionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
-    attributes: ["pagination_enabled" => false]
+    attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['medicalPrescription']]
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'medicalPrescriptionDescription' => SearchFilter::STRATEGY_PARTIAL,
@@ -28,12 +30,15 @@ class MedicalPrescription
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['doctor', 'medicalPrescription', 'consultation'])]
     private $id;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['doctor', 'medicalPrescription', 'consultation'])]
     private $medicalPrescriptionDescription;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['doctor', 'medicalPrescription', 'consultation'])]
     private $medicalPrescriptionCreatedAt;
 
     #[ORM\Column(type: 'datetime')]
@@ -43,6 +48,7 @@ class MedicalPrescription
     private $consultation;
 
     #[ORM\OneToMany(mappedBy: 'medicalPrescription', targetEntity: Medication::class)]
+    #[Groups(['medicalPrescription'])]
     private $medications;
 
     #[ORM\ManyToOne(targetEntity: Doctor::class, inversedBy: 'medicalPrescriptions')]

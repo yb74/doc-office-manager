@@ -10,12 +10,14 @@ use App\Repository\ConsultationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
-    attributes: ["pagination_enabled" => false]
+    attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['consultation']]
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'consultationDetails' => SearchFilter::STRATEGY_PARTIAL
@@ -29,12 +31,15 @@ class Consultation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['doctor', 'consultation', 'patient'])]
     private $id;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['doctor', 'consultation', 'patient'])]
     private $consultationDetails;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(['doctor', 'consultation', 'patient'])]
     private $consultationDate;
 
     #[ORM\Column(type: 'time')]
@@ -56,9 +61,11 @@ class Consultation
     private $doctor;
 
     #[ORM\OneToMany(mappedBy: 'consultation', targetEntity: MedicalPrescription::class)]
+    #[Groups(['consultation'])]
     private $medicalPrescriptions;
 
     #[ORM\OneToMany(mappedBy: 'consultation', targetEntity: Diagnostic::class)]
+    #[Groups(['consultation'])]
     private $diagnostics;
 
     public function __construct()

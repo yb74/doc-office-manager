@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -20,7 +21,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ApiResource(
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
-    attributes: ["pagination_enabled" => false]
+    attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['doctor']]
 )]
 
 #[ApiFilter(SearchFilter::class, properties: [
@@ -36,20 +38,20 @@ class Doctor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['user', 'institution'])]
+    #[Groups(['user', 'institution', 'doctor'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $rppsNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user', 'institution'])]
+    #[Groups(['user', 'institution', 'doctor'])]
     #[NotBlank]
     #[Length(min: 3)]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user', 'institution'])]
+    #[Groups(['user', 'institution', 'doctor'])]
     #[Assert\NotIdenticalTo(propertyPath: "firstname")]
     private $lastname;
 
@@ -90,12 +92,16 @@ class Doctor
     private $doctorUpdatedAt;
 
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Consultation::class)]
+    #[Groups(['doctor'])]
     private $consultations;
 
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Patient::class)]
+    #[Groups(['doctor'])]
+    #[ApiSubresource]
     private $patients;
 
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: MedicalPrescription::class)]
+    #[Groups(['doctor'])]
     private $medicalPrescriptions;
 
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]

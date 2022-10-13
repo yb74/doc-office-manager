@@ -10,12 +10,14 @@ use App\Repository\PatientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
     collectionOperations: ['get', 'post'],
     itemOperations: ['get', 'put', 'delete'],
-    attributes: ["pagination_enabled" => false]
+    attributes: ["pagination_enabled" => false],
+    normalizationContext: ['groups' => ['patient']]
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'firstname' => SearchFilter::STRATEGY_PARTIAL,
@@ -29,15 +31,18 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['doctor', 'patient'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $socialSecurityNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['doctor', 'patient'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['doctor', 'patient'])]
     private $lastname;
 
     #[ORM\Column(type: 'date')]
@@ -86,15 +91,18 @@ class Patient
     private $patientUpdatedAt;
 
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Consultation::class)]
+    #[Groups(['patient'])]
     private $consultations;
 
     #[ORM\ManyToOne(targetEntity: Doctor::class, inversedBy: 'patients')]
     private $doctor;
 
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Medication::class)]
+    #[Groups(['patient'])]
     private $medications;
 
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: MedicalHistory::class)]
+    #[Groups(['patient'])]
     private $medicalHistories;
 
     public function __construct()

@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\MedicationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -29,17 +30,21 @@ class Medication
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['patient', 'medicalPrescription'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[NotBlank]
     #[Length(min: 3)]
+    #[Groups(['patient', 'medicalPrescription'])]
     private $medicationName;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['patient', 'medicalPrescription'])]
     private $medicationDosage;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['patient', 'medicalPrescription'])]
     private $medicationForm;
 
     #[ORM\Column(type: 'datetime')]

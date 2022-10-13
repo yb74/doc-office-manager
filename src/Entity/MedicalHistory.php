@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\MedicalHistoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ApiResource] => exposes all request operations
 #[ApiResource(
@@ -27,9 +28,11 @@ class MedicalHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['patient'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['patient'])]
     private $medicalHistoryName;
 
     #[ORM\Column(type: 'text')]
