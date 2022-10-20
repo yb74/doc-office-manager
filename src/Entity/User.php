@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,10 +16,31 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
-    collectionOperations: ['get', 'post'],
-    itemOperations: ['get', 'put', 'delete'],
+    security: 'is_granted("ROLE_USER")',
+    collectionOperations: [
+        'get',
+        'post',
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => ['cookieAuth' => []]
+            ]
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ], 'put', 'delete'
+    ],
     attributes: ["pagination_enabled" => false],
-    normalizationContext: ['groups' => ['user']]
+    normalizationContext: ['groups' => ['read:user']]
 )]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -26,29 +49,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['user'])]
+    #[Groups(['read:user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(['user'])]
+    #[Groups(['read:user'])]
     #[NotBlank]
     #[Length(min: 3)]
     private $login;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(['user'])]
+    #[Groups(['read:user'])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Doctor::class, cascade: ['persist', 'remove'])]
-    #[Groups(['user'])]
+    #[Groups(['read:user'])]
     #[ApiSubresource]
     private $doctor;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Secretary::class, cascade: ['persist', 'remove'])]
-    #[Groups('user')]
+    #[Groups('read:user')]
     #[ApiSubresource]
     private $secretary;
 
