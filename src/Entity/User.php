@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
-    security: 'is_granted("ROLE_USER")',
     collectionOperations: [
         'get',
         'post',
@@ -40,7 +39,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
         ], 'put', 'delete'
     ],
     attributes: ["pagination_enabled" => false],
-    normalizationContext: ['groups' => ['read:user']]
+    normalizationContext: ['groups' => ['read:user']],
+    security: 'is_granted("ROLE_USER")'
 )]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]

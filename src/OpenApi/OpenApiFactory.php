@@ -2,7 +2,10 @@
 
 namespace App\OpenApi;
 
+use ApiPlatform\Core\OpenApi\Model\PathItem;
+use ApiPlatform\Core\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\OpenApi;
 
 class OpenApiFactory implements OpenApiFactoryInterface
@@ -28,6 +31,52 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'name' => 'PHPSESSID'
         ]);
         // $openApi = $openApi->withSecurity(['cookieAuth' => []]);
+
+        $schemas = $openApi->getComponents()->getSchemas();
+
+        $schemas['Credentials'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'myLogin1',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => '123456',
+                ]
+            ]
+        ]);
+
+        $pathItem = new PathItem(
+            post: new Operation(
+                operationId: 'postApiLogin',
+                tags: ['Auth'],
+                responses: [
+                    '200' => [
+                        'description' => 'Utilisateur Connecté',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/User-read.user'
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Credentials'
+                            ]
+                        ]
+                    ])
+                )
+            )
+        );
+
+        $openApi->getPaths()->addPath('/api/login', $pathItem);
 
         return $openApi;
     }

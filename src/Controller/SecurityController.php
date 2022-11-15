@@ -17,6 +17,12 @@ class SecurityController extends AbstractController
             'roles' => $user->getRoles()
         ]);
     }
+
+    #[Route(path: '/api/logout', name: 'api_logout', methods: ['POST'])]
+    public function logout () {
+
+    }
+
 //    #[Route(path: '/login', name: 'app_login')]
 //    public function login(AuthenticationUtils $authenticationUtils): Response
 //    {
