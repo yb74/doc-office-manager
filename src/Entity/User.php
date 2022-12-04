@@ -16,9 +16,14 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
-    collectionOperations: [
-        'get',
-        'post',
+    collectionOperations: [],
+    itemOperations: [
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
         'me' => [
             'pagination_enabled' => false,
             'path' => '/me',
@@ -28,14 +33,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
             'openapi_context' => [
                 'security' => ['cookieAuth' => []]
             ]
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'openapi_context' => ['summary' => 'hidden'],
-            'read' => false,
-            'output' => false
         ], 'put', 'delete'
     ],
     attributes: ["pagination_enabled" => false],

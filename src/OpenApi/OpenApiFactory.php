@@ -43,7 +43,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => '123456',
+                    'example' => 'myPassword1',
                 ]
             ]
         ]);
@@ -77,6 +77,19 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
 
         $openApi->getPaths()->addPath('/api/login', $pathItem);
+
+
+        $pathItem = new PathItem(
+            post: new Operation(
+                operationId: 'postApiLogout',
+                tags: ['Auth'],
+                responses: [
+                    '204' => []
+                ],
+            )
+        );
+
+        $openApi->getPaths()->addPath('/logout', $pathItem);
 
         return $openApi;
     }

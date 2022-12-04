@@ -24,7 +24,8 @@ security:
             json_login:
                 check_path: /api/login
             logout:
-                path: api_logout
+                path: app_logout
+            custom_authenticator: App\Security\AppAuthenticator
 
 #            custom_authenticator: App\Security\AppCustomAuthenticator
 #            logout:
