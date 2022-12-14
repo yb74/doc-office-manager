@@ -22,10 +22,9 @@ security:
             lazy: true
             provider: app_user_provider
             json_login:
-                check_path: /api/login
+                check_path: api_login
             logout:
-                path: app_logout
-            custom_authenticator: App\Security\AppAuthenticator
+                path: api_logout
 
 #            custom_authenticator: App\Security\AppCustomAuthenticator
 #            logout:
