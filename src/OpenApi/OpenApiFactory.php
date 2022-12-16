@@ -48,13 +48,18 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ]
         ]);
 
+        // trick to remove required id parameter from '/api/me' resource (api platform) :
+        $meOperation = $openApi->getPaths()->getpath('/api/me')->getGet()->withParameters([]);
+        $mePathItem = $openApi->getPaths()->getpath('/api/me')->withGet($meOperation);
+        $openApi->getPaths()->addPath('/api/me', $mePathItem);
+
         $pathItem = new PathItem(
             post: new Operation(
                 operationId: 'postApiLogin',
                 tags: ['Auth'],
                 responses: [
                     '200' => [
-                        'description' => 'Utilisateur Connecté',
+                        'description' => 'User connected',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
@@ -89,7 +94,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             )
         );
 
-        $openApi->getPaths()->addPath('/logout', $pathItem);
+        $openApi->getPaths()->addPath('/api/logout', $pathItem);
 
         return $openApi;
     }
