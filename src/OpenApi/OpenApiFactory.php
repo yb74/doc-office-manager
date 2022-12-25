@@ -25,10 +25,10 @@ class OpenApiFactory implements OpenApiFactoryInterface
         }
 
         $schemas = $openApi->getComponents()->getSecuritySchemes();
-        $schemas['cookieAuth'] = new \ArrayObject([
-            'type' => 'apiKey',
-            'in' => 'cookie',
-            'name' => 'PHPSESSID'
+        $schemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT'
         ]);
         // $openApi = $openApi->withSecurity(['cookieAuth' => []]);
 
@@ -48,6 +48,16 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ]
         ]);
 
+        $schemas['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ]
+        ]);
+
         // trick to remove required id parameter from '/api/me' resource (api platform) :
         $meOperation = $openApi->getPaths()->getpath('/api/me')->getGet()->withParameters([]);
         $mePathItem = $openApi->getPaths()->getpath('/api/me')->withGet($meOperation);
@@ -59,11 +69,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 tags: ['Auth'],
                 responses: [
                     '200' => [
-                        'description' => 'User connected',
+                        'description' => 'Token JWT',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/User-read.user'
+                                    '$ref' => '#/components/schemas/Token'
                                 ]
                             ]
                         ]

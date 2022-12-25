@@ -42,7 +42,7 @@ class PatientFixtures extends Fixture
             $user->setLogin("myLogin".$i);
             $user->setPassword("myPassword".$i);
             $user->setRoles([$userRoles[array_rand($userRoles)]]); // Randomly setting a role to the created user
-            $user->setDoctor($doctor);
+//            $user->setDoctor($doctor);
 
             if(in_array('ROLE_DOCTOR', $user->getRoles())) {
                 $user->setDoctor($doctor);

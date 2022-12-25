@@ -9,6 +9,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,7 +32,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
             'controller' => MeController::class,
             'read' => false,
             'openapi_context' => [
-                'security' => ['cookieAuth' => []]
+                'security' => [['bearerAuth' => []]]
             ]
         ], 'put', 'delete'
     ],
@@ -41,7 +42,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 )]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -77,6 +78,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getLogin(): ?string
     {
         return $this->login;
@@ -96,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->login;
+        return (string) $this->id;
     }
 
     /**
@@ -184,5 +192,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->secretary = $secretary;
 
         return $this;
+    }
+
+    public static function createFromPayload($id, array $payload)
+    {
+        $user = new User();
+        $user->setId($id);
+        $user->setLogin($payload['login'] ?? '');
+
+        return $user;
     }
 }
